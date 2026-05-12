@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Andin Sabilla Janna — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- BACKGROUND BUBBLES -->
+<div class="bubbles-bg" id="bubblesContainer"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">✦ Andin</div>
+
+  <button class="nav-toggle" id="navToggle" aria-label="Buka menu" aria-expanded="false" aria-controls="navMenu">☰</button>
+
+  <ul class="nav-links" id="navMenu">
+    <li><a href="#about">Tentang</a></li>
+    <li><a href="#education">Pendidikan</a></li>
+    <li><a href="#organizations">Organisasi</a></li>
+    <li><a href="#projects">Proyek</a></li>
+    <li><a href="#certificates">Sertifikat</a></li>
+    <li><a href="#contact">Kontak</a></li>
+  </ul>
+</nav>
+
+
+<!-- HERO -->
+<section id="hero">
+  <div>
+    <div class="hero-tag">✦ UI/UX Enthusiast &nbsp;·&nbsp; Mahasiswi Sistem Informasi</div>
+    <h1 class="hero-name">
+      Andin<br><span>Sabilla</span><br>Janna
+    </h1>
+    <div class="hero-cta">
+      <a href="#projects" class="btn-primary">Lihat Proyek ↓</a>
+      <a href="#contact" class="btn-outline">Hubungi Saya</a>
+    </div>
+  </div>
+  <div class="hero-deco">
+    <div class="hero-circle-big glow-pulse">
+      <div class="hero-circle-inner">
+        <img id="heroAvatar" class="hero-avatar" src="https://media.discordapp.net/attachments/1241035804898234519/1503813176968351754/avatar.jpg?ex=6a04b6a8&is=6a036528&hm=9af8a9f68d3e1aa9232e43f30120fcd8ca55113e9cf13a7de223ff01b59011dc&=&format=webp&width=395&height=525" alt="Andin's Avatar">
+      </div>
+      <div class="orbit-dot" style="top:-5px;left:50%;transform:translateX(-50%)"></div>
+      <div class="orbit-dot" style="bottom:-5px;left:50%;transform:translateX(-50%)"></div>
+      <style>
+        /* allow user to change avatar just by editing this src */
+        #heroAvatar { content: url('asset/avatar.jpg'); }
+      </style>
+    </div>
+  </div>
+  <span class="star-float" style="top:25%;left:52%;animation-delay:0s">✦</span>
+  <span class="star-float" style="top:60%;left:48%;animation-delay:1s">✧</span>
+  <span class="star-float" style="top:35%;left:80%;animation-delay:2s">✦</span>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-inner" id="marqueeInner">
+    <span>UI/UX Design <b>✦</b></span>
+    <span>Figma Prototyping <b>✦</b></span>
+    <span>HTML/CSS <b>✦</b></span>
+    <span>Videography <b>✦</b></span>
+    <span>Event Committee <b>✦</b></span>
+    <span>UI/UX Design <b>✦</b></span>
+    <span>Figma Prototyping <b>✦</b></span>
+    <span>HTML/CSS <b>✦</b></span>
+    <span>Videography <b>✦</b></span>
+    <span>Event Committee <b>✦</b></span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="about-left reveal">
+    <div class="big-initial">A</div>
+    <p class="tagline">Halo! Ayo kenalan !🌸</p>
+    <p>Halo! Namaku Andin Sabila Janna, saya kerap dipanggil Andin. Seorang Mahasiswa Fakultas Ilmu Komputer, Jurusan Sistem Informasi di Universitas Sriwijaya. Saya adalah orang yang memiliki kemampuan adaptasi yang bagus dan bersemangat untuk belajar hal
+    baru. Selain itu, saya juga orang yang tertarik pada pengembangan diri melalui pengalaman organisasi dan kerja tim, dengan fokus pada
+    kontribusi nyata dalam lingkungan sekitar. Saat ini selain fokus belajar, saya juga aktif dalam berbagai organisasi kampus yang mendukung pengembangan minat dan keterampilan, terutama di bidang
+    akademik maupun non akademik</p>
+    <div class="skills-row">
+      <div class="skill-pill">🎨 Figma</div>
+      <div class="skill-pill">💻 HTML CSS</div>
+      <div class="skill-pill">📱 UI/UX</div>
+      <div class="skill-pill">🎬 Videography</div>
+    </div>
+  </div>
+  <div class="about-right reveal">
+    <div class="info-card">
+      <div class="info-icon">🌸</div>
+      <div>
+        <div class="info-label">Nama Lengkap</div>
+        <div class="info-val">Andin Sabilla Janna</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">📍</div>
+      <div>
+        <div class="info-label">Tempat Lahir</div>
+        <div class="info-val">Palembang, 16 Agustus 2005</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">🎓</div>
+      <div>
+        <div class="info-label">Universitas</div>
+        <div class="info-val">Universitas Sriwijaya — Sistem Informasi</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">🎶</div>
+      <div>
+        <div class="info-label">Hobi</div>
+        <div class="info-val">Bernyanyi & Mendengarkan Musik</div>
+      </div>
+    </div>
+    <div class="info-card">
+      <div class="info-icon">✨</div>
+      <div>
+        <div class="info-label">Fokus</div>
+        <div class="info-val">UI/UX Design · Organisasi · Kreativitas</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EDUCATION -->
+<section id="education">
+  <div class="sec-label">Perjalanan Akademik</div>
+  <h2 class="sec-title reveal">Educational <em>Background</em></h2>
+  <div class="edu-track">
+    <div class="edu-item">
+      <div class="edu-dot"></div>
+      <div class="edu-period">2017 – 2019</div>
+      <div class="edu-school">SMP Negeri 59 Palembang</div>
+      <span class="edu-badge">Sekolah Menengah Pertama</span>
+    </div>
+    <div class="edu-item">
+      <div class="edu-dot"></div>
+      <div class="edu-period">2020 – 2023</div>
+      <div class="edu-school">SMA Negeri 13 Palembang</div>
+      <span class="edu-badge">Sekolah Menengah Atas</span>
+    </div>
+    <div class="edu-item">
+      <div class="edu-dot" style="background:var(--pink); box-shadow:0 0 0 5px rgba(255,45,120,0.25)"></div>
+      <div class="edu-period">2023 – Sekarang</div>
+      <div class="edu-school">Universitas Sriwijaya</div>
+      <span class="edu-badge">S1 Sistem Informasi · FASILKOM</span>
+    </div>
+  </div>
+</section>
+
+<!-- ORGANIZATIONS -->
+<section id="organizations">
+  <div class="sec-label">Pengalaman Organisasi</div>
+  <h2 class="sec-title reveal">Active <em>Organizations</em></h2>
+  <div class="org-grid">
+    <div class="org-card">
+      <div class="org-period">2021 – 2022</div>
+      <div class="org-title">Bendahara Umum Rohis SMAN 13 Palembang</div>
+      <div class="org-desc">Mengelola keuangan organisasi dengan akurasi dan transparansi. Aktif berkontribusi dalam kegiatan islami termasuk hari besar islam dan divisi nasyid.</div>
+    </div>
+    <div class="org-card">
+      <div class="org-period">2023 – 2024</div>
+      <div class="org-title">Staff Divisi Seni — Himpunan Mahasiswa Sistem Informasi (HIMSI)</div>
+      <div class="org-desc">Berpartisipasi dalam pelaksanaan kegiatan seni di proker HIMSI. Aktif di berbagai kepanitiaan termasuk videography, acara, dan konsumsi.</div>
+    </div>
+    <div class="org-card">
+      <div class="org-period">2025 – Sekarang</div>
+      <div class="org-title">Kepala Divisi Seni — Departemen Pengembangan Minat & Bakat HIMSI FASILKOM UNSRI</div>
+      <div class="org-desc">Memastikan pelaksanaan program berjalan sesuai rencana dan tujuan divisi. Mewadahi seluruh staff HIMSI yang memiliki minat dan bakat di bidang seni.</div>
+    </div>
+    <div class="org-card">
+      <div class="org-period">2025 – Sekarang</div>
+      <div class="org-title">Anggota Divisi UI/UX — GDGoC UNSRI</div>
+      <div class="org-desc">Mengikuti pelatihan dan diskusi rutin mengenai desain UI/UX. Membuat beberapa proyek UIUX sesuai materi yang dipelajari. Aktif di kepanitiaan GDGoC UNSRI.</div>
+    </div>
+    <div class="org-card">
+      <div class="org-period">2025 – Sekarang</div>
+      <div class="org-title">Anggota Divisi Videography & Documentation — Sifest UNSRI 2024</div>
+      <div class="org-desc">Mendokumentasikan acara, podcast, kompetisi, dan mengedit keperluan video untuk SIFEST UNSRI 2024.</div>
+    </div>
+    <div class="org-card">
+      <div class="org-period">2025 – Sekarang</div>
+      <div class="org-title">Steering Committee — Marketing Sub Divisi Promotion SIFEST 2025</div>
+      <div class="org-desc">Menghandle anggota dan organization committee dalam pembuatan konten promosi. Menjadi penasihat divisi dalam pengendalian kegiatan secara rinci.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="sec-label">Karya Digital</div>
+  <h2 class="sec-title reveal">My <em>Projects</em></h2>
+  <div class="proj-grid">
+
+    <div class="proj-card">
+      <div class="proj-thumb" style="background:linear-gradient(135deg,#3d0035,#1a0a1a)">
+        <img class="proj-thumb-img" src="https://i.imgur.com/8Km9tLL.png" alt="Foto proyek 01">
+        <span class="emoji">🧁</span>
+      </div>
+      <div class="proj-body">
+        <div class="proj-num">Proyek 01</div>
+        <div class="proj-name">Cupcake Corner</div>
+        <div class="proj-desc">Website e-commerce sederhana untuk pemesanan cupcake secara online, lengkap dengan halaman login, dashboard admin, dan database.</div>
+        <div class="proj-tags">
+          <span class="tag">Web Dev</span>
+          <span class="tag">E-commerce</span>
+          <span class="tag">Database</span>
+        </div>
+        <span class="proj-link">Lihat Proyek →</span>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-thumb" style="background:linear-gradient(135deg,#0a1a3d,#001a2d)">
+        <img class="proj-thumb-img" src="https://i.imgur.com/8Km9tLL.png" alt="Foto proyek 02">
+        <span class="emoji">✈️</span>
+      </div>
+      <div class="proj-body">
+        <div class="proj-num">Proyek 02</div>
+        <div class="proj-name">GDSkyConnect</div>
+        <div class="proj-desc">Aplikasi mobile untuk memesan tiket pesawat secara online, pemesanan hotel/vila, dan kemudahan proses reschedule pemesanan tiket.</div>
+        <div class="proj-tags">
+          <span class="tag">UI Design</span>
+          <span class="tag">Figma</span>
+          <span class="tag">Mobile App</span>
+        </div>
+        <a href="#" class="proj-link" onclick="return false;">Lihat Prototype →</a>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-thumb" style="background:linear-gradient(135deg,#002a3d,#0a1a2a)">
+        <img class="proj-thumb-img" src="https://i.imgur.com/8Km9tLL.png" alt="Foto proyek 03">
+        <span class="emoji">🐻</span>
+      </div>
+      <div class="proj-body">
+        <div class="proj-num">Proyek 03</div>
+        <div class="proj-name">SocialBloom</div>
+        <div class="proj-desc">Aplikasi mobile interaktif untuk melatih keterampilan interaksi sosial anak dengan Autism Spectrum Disorder (ASD) menggunakan pendekatan visual-kinestetik.</div>
+        <div class="proj-tags">
+          <span class="tag">UI/UX</span>
+          <span class="tag">Accessibility</span>
+          <span class="tag">Figma</span>
+        </div>
+        <a href="#" class="proj-link" onclick="return false;">Lihat Prototype →</a>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-thumb" style="background:linear-gradient(135deg,#003d2a,#001a15)">
+        <img class="proj-thumb-img" src="https://i.imgur.com/8Km9tLL.png" alt="Foto proyek 04">
+        <span class="emoji">👩‍⚕️</span>
+      </div>
+      <div class="proj-body">
+        <div class="proj-num">Proyek 04</div>
+        <div class="proj-name">Prima+</div>
+        <div class="proj-desc">Aplikasi konsultasi kesehatan online yang dirancang khusus untuk mempermudah para lansia mengakses layanan medis dengan tampilan sederhana dan ramah pengguna.</div>
+        <div class="proj-tags">
+          <span class="tag">UI/UX</span>
+          <span class="tag">Healthcare</span>
+          <span class="tag">Lansia</span>
+        </div>
+        <a href="#" class="proj-link" onclick="return false;">Lihat Prototype →</a>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-thumb" style="background:linear-gradient(135deg,#1a003d,#0a001a)">
+        <img class="proj-thumb-img" src="https://i.imgur.com/8Km9tLL.png" alt="Foto proyek 05">
+        <span class="emoji">📚</span>
+      </div>
+      <div class="proj-body">
+        <div class="proj-num">Proyek 05</div>
+        <div class="proj-name">Portfolio Builder</div>
+        <div class="proj-desc">Template portfolio interaktif dengan komponen UI modern, mudah diedit, dan tetap responsif di semua ukuran layar.</div>
+        <div class="proj-tags">
+          <span class="tag">UI/UX</span>
+          <span class="tag">Design System</span>
+          <span class="tag">Web</span>
+        </div>
+        <a href="#" class="proj-link" onclick="return false;">Lihat Prototype →</a>
+      </div>
+    </div>
+
+    <div class="proj-card">
+      <div class="proj-thumb" style="background:linear-gradient(135deg,#003d2a,#001a10)">
+        <img class="proj-thumb-img" src="https://i.imgur.com/8Km9tLL.png" alt="Foto proyek 06">
+        <span class="emoji">🎨</span>
+      </div>
+      <div class="proj-body">
+        <div class="proj-num">Proyek 06</div>
+        <div class="proj-name">Glow Commerce</div>
+        <div class="proj-desc">Landing page e-commerce dengan micro-interaction lucu: hover glow, transisi halus, dan layout yang bersih.</div>
+        <div class="proj-tags">
+          <span class="tag">Web Dev</span>
+          <span class="tag">UI Motion</span>
+          <span class="tag">E-commerce</span>
+        </div>
+        <a href="#" class="proj-link" onclick="return false;">Lihat Prototype →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CERTIFICATES -->
+<section id="certificates">
+  <div class="sec-label">Sertifikat</div>
+  <h2 class="sec-title reveal">My <em>Certifications</em></h2>
+  <div class="cert-wrap">
+    <div class="cert-scroll">
+      <div class="cert-card reveal">
+        <img class="cert-img" src="https://i.imgur.com/8Km9tLL.png" alt="Sertifikat 01">
+        <div class="cert-body">
+          <div class="cert-title">UI/UX Fundamentals</div>
+          <div class="cert-meta">2024 · Pelatihan desain & prototyping</div>
+        </div>
+      </div>
+      <div class="cert-card reveal">
+        <img class="cert-img" src="https://i.imgur.com/8Km9tLL.png" alt="Sertifikat 02">
+        <div class="cert-body">
+          <div class="cert-title">Figma Prototyping</div>
+          <div class="cert-meta">2024 · Component & motion basics</div>
+        </div>
+      </div>
+      <div class="cert-card reveal">
+        <img class="cert-img" src="https://i.imgur.com/8Km9tLL.png" alt="Sertifikat 03">
+        <div class="cert-body">
+          <div class="cert-title">Web Development</div>
+          <div class="cert-meta">2025 · Frontend & responsive UI</div>
+        </div>
+      </div>
+      <div class="cert-card reveal">
+        <img class="cert-img" src="https://i.imgur.com/8Km9tLL.png" alt="Sertifikat 04">
+        <div class="cert-body">
+          <div class="cert-title">Design System</div>
+          <div class="cert-meta">2025 · Konsistensi UI & tokens</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="contact-inner">
+    <div class="sec-label">Let's Connect!</div>
+    <h2 class="sec-title reveal">Yuk <em>Ngobrol!</em> 🌸</h2>
+    <p class="contact-sub reveal">Ada proyek menarik, kolaborasi seru, atau sekadar ingin kenalan? Jangan ragu untuk menghubungiku — aku selalu terbuka untuk hal-hal baru!</p>
+    <div class="contact-cards reveal">
+      <a href="mailto:andiensj123@gmail.com" class="contact-card">
+        <div class="ci">📧</div>
+        <div class="cl">Email</div>
+        <div class="cv">andiensj123@gmail.com</div>
+      </a>
+    <a href="https://instagram.com/ddien.s" target="_blank" rel="noopener" class="contact-card">
+        <div class="ci">📸</div>
+
+        <div class="cl">Instagram</div>
+        <div class="cv">@ddien.s</div>
+      </a>
+    </div>
+    <a 
+  href="mailto:andiensj123@gmail.com?subject=Halo%20Andin&body=Halo%20Andin,%20saya%20ingin%20menghubungi%20Anda."
+  class="btn-primary"
+>Kirim Pesan ✉️</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p>© 2025 Andin Sabilla Janna. Dibuat dengan <span class="footer-heart">♥</span> dari Palembang.</p>
+  <p style="color:var(--pink);font-size:0.85rem">✦ UI/UX Enthusiast</p>
+</footer>
+
+<script>
+  // CURSOR
+  const cursor = document.getElementById('cursor');
+  const cursorRing = document.getElementById('cursorRing');
+  let mx=0,my=0,rx=0,ry=0;
+  document.addEventListener('mousemove', e => {
+    mx=e.clientX; my=e.clientY;
+    cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+  });
+  function animRing(){
+    rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+    cursorRing.style.left=rx+'px'; cursorRing.style.top=ry+'px';
+    requestAnimationFrame(animRing);
+  }
+  animRing();
+
+  // SPARKLES ON CLICK
+  document.addEventListener('click', e => {
+    for(let i=0;i<6;i++){
+      const s=document.createElement('div');
+      s.classList.add('sparkle');
+      s.style.left=(e.clientX+Math.random()*30-15)+'px';
+      s.style.top=(e.clientY+Math.random()*30-15)+'px';
+      s.style.fontSize=(Math.random()*14+8)+'px';
+      s.innerHTML = Math.random()>0.5?'✦':'✧';
+      s.style.color = 'hsl('+(340+Math.random()*40)+',100%,'+(60+Math.random()*20)+'%)';
+      document.body.appendChild(s);
+      setTimeout(()=>s.remove(),800);
+    }
+  });
+
+  // BUBBLES BG
+  const bc = document.getElementById('bubblesContainer');
+  const bubbleData = [
+    {w:400,h:400,t:10,l:5,dur:8},
+    {w:300,h:300,t:60,l:80,dur:11},
+    {w:500,h:500,t:30,l:40,dur:13},
+    {w:200,h:200,t:80,l:20,dur:7},
+    {w:350,h:350,t:5,l:65,dur:10},
+  ];
+  bubbleData.forEach(b=>{
+    const el=document.createElement('div');
+    el.classList.add('bubble');
+    el.style.cssText=`width:${b.w}px;height:${b.h}px;top:${b.t}%;left:${b.l}%;animation-duration:${b.dur}s`;
+    bc.appendChild(el);
+  });
+
+  // SCROLL REVEAL
+  const reveals = document.querySelectorAll('.reveal,.org-card,.proj-card,.edu-item,.cert-card');
+  const obs = new IntersectionObserver(entries=>{
+    entries.forEach((e,i)=>{
+      if(e.isIntersecting){
+        setTimeout(()=>e.target.classList.add('visible'), i*80);
+        obs.unobserve(e.target);
+      }
+    });
+  },{threshold:0.12});
+  reveals.forEach(el=>obs.observe(el));
+
+  // NAV HOVER CURSOR
+  document.querySelectorAll('a,button,.btn-primary,.btn-outline,.proj-card,.org-card,.cert-card').forEach(el=>{
+    el.addEventListener('mouseenter',()=>{
+      cursor.style.width='20px'; cursor.style.height='20px';
+      cursorRing.style.width='50px'; cursorRing.style.height='50px';
+    });
+    el.addEventListener('mouseleave',()=>{
+      cursor.style.width='14px'; cursor.style.height='14px';
+      cursorRing.style.width='36px'; cursorRing.style.height='36px';
+    });
+  });
+</script>
+</body>
+</html>
