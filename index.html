@@ -363,7 +363,7 @@
         <img class="cert-img" src="/asset/promotion.jpeg" alt="Sertifikat 02">
         <div class="cert-body">
           <div class="cert-title">Steering Committee Marketing Sub Divisi Promotion SIFEST 2025 </div>
-          <div class="cert-meta">2024</div>
+          <div class="cert-meta">2025</div>
         </div>
       </div>
     </div>
@@ -472,6 +472,38 @@
       cursorRing.style.width='36px'; cursorRing.style.height='36px';
     });
   });
+
+  // NAV TOGGLE (Mobile hamburger)
+  const navToggle = document.getElementById('navToggle');
+  const navMenu = document.getElementById('navMenu');
+
+  if(navToggle && navMenu){
+    const setOpen = (isOpen)=>{
+      navMenu.classList.toggle('open', isOpen);
+      navToggle.setAttribute('aria-expanded', String(isOpen));
+    };
+
+    navToggle.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const isOpen = navMenu.classList.contains('open');
+      setOpen(!isOpen);
+    });
+
+    // Tutup menu saat klik salah satu item
+    navMenu.querySelectorAll('a').forEach(link=>{
+      link.addEventListener('click', ()=> setOpen(false));
+    });
+
+    // Tutup menu kalau klik area luar
+    document.addEventListener('click', ()=>{
+      if(navMenu.classList.contains('open')) setOpen(false);
+    });
+
+    // Jangan tutup langsung saat klik tombol (stopPropagation sudah cukup)
+    navMenu.addEventListener('click', (e)=>{
+      e.stopPropagation();
+    });
+  }
 </script>
 </body>
 </html>
