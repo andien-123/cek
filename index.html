@@ -6,6 +6,233 @@
 <title>Andin Sabilla Janna — Portfolio</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<style>
+/* ══════════════════════════════════════════
+   GALLERY POPUP — Stacked Card Style
+══════════════════════════════════════════ */
+
+.org-card { cursor: pointer; }
+.org-card-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 10px;
+  background: var(--pink-glow);
+  border: 1px solid var(--border);
+  color: var(--pink-light);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 3px 10px;
+  border-radius: 100px;
+  opacity: 0.85;
+  transition: opacity 0.2s;
+}
+.org-card:hover .org-card-badge { opacity: 1; }
+
+#galleryOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(8,0,8,0);
+  backdrop-filter: blur(0px);
+  -webkit-backdrop-filter: blur(0px);
+  transition: background 0.45s ease, backdrop-filter 0.45s ease;
+  pointer-events: none;
+  padding: 20px;
+}
+#galleryOverlay.active {
+  background: rgba(8,0,8,0.82);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  pointer-events: all;
+}
+
+.gallery-panel {
+  position: relative;
+  width: min(480px, 92vw);
+  background: #1a0018;
+  border: 1px solid rgba(255,45,120,0.25);
+  border-radius: 28px;
+  padding: 28px 28px 32px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+  transform: scale(0.82) translateY(40px);
+  opacity: 0;
+  transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s ease;
+  box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,45,120,0.1);
+}
+#galleryOverlay.active .gallery-panel {
+  transform: scale(1) translateY(0);
+  opacity: 1;
+}
+
+.gallery-header {
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+.gallery-title-wrap { flex: 1; }
+.gallery-label {
+  font-size: 0.65rem;
+  color: var(--pink);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.gallery-title {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  line-height: 1.35;
+  color: var(--white);
+}
+.gallery-close {
+  width: 36px; height: 36px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: rgba(255,45,120,0.1);
+  border: 1px solid rgba(255,45,120,0.2);
+  color: var(--pink-light);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  transition: background 0.2s, transform 0.2s;
+  line-height: 1;
+}
+.gallery-close:hover { background: rgba(255,45,120,0.25); transform: rotate(90deg); }
+
+.card-stack {
+  position: relative;
+  width: 100%;
+  height: 270px;
+  display: flex; align-items: center; justify-content: center;
+  user-select: none; -webkit-user-select: none;
+}
+
+.photo-card {
+  position: absolute;
+  width: 220px; height: 270px;
+  border-radius: 20px;
+  overflow: hidden;
+  border: 1px solid rgba(255,45,120,0.2);
+  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+  cursor: grab;
+  will-change: transform;
+  touch-action: none;
+}
+.photo-card:active { cursor: grabbing; }
+.photo-card img {
+  width: 100%; height: 100%;
+  object-fit: cover; display: block;
+  pointer-events: none; border-radius: 20px;
+}
+
+.photo-card[data-pos="2"] {
+  transform: rotate(-10deg) translateX(-32px) translateY(8px) scale(0.9);
+  z-index: 1; filter: brightness(0.7);
+}
+.photo-card[data-pos="1"] {
+  transform: rotate(-4deg) translateX(-14px) translateY(2px) scale(0.95);
+  z-index: 2; filter: brightness(0.85);
+}
+.photo-card[data-pos="0"] {
+  transform: rotate(1deg) translateX(4px) translateY(0px) scale(1);
+  z-index: 3; filter: brightness(1);
+  box-shadow: 0 24px 60px rgba(255,45,120,0.25), 0 0 0 1px rgba(255,45,120,0.3);
+}
+
+.photo-card.transitioning {
+  transition: transform 0.45s cubic-bezier(0.22,1,0.36,1),
+              filter 0.4s ease, z-index 0s 0.22s, box-shadow 0.4s ease;
+}
+
+@keyframes flyOut {
+  0%   { transform: rotate(1deg) translateX(4px) scale(1); opacity:1; }
+  40%  { opacity:1; }
+  100% { transform: rotate(28deg) translateX(160px) translateY(-60px) scale(0.8); opacity:0; }
+}
+@keyframes flyOutLeft {
+  0%   { transform: rotate(1deg) translateX(4px) scale(1); opacity:1; }
+  40%  { opacity:1; }
+  100% { transform: rotate(-28deg) translateX(-160px) translateY(-60px) scale(0.8); opacity:0; }
+}
+.photo-card.fly-right { animation: flyOut 0.5s cubic-bezier(0.4,0,0.7,0.4) forwards; }
+.photo-card.fly-left  { animation: flyOutLeft 0.5s cubic-bezier(0.4,0,0.7,0.4) forwards; }
+
+@keyframes entryFromBack {
+  0%   { transform: rotate(-14deg) translateX(-50px) translateY(15px) scale(0.82); filter:brightness(0.6); opacity:0; }
+  100% { transform: rotate(-10deg) translateX(-32px) translateY(8px) scale(0.9); filter:brightness(0.7); opacity:1; }
+}
+.photo-card.entering { animation: entryFromBack 0.45s cubic-bezier(0.34,1.2,0.64,1) forwards; }
+
+.swipe-hint {
+  font-size: 0.72rem; color: var(--muted);
+  letter-spacing: 0.06em;
+  display: flex; align-items: center; gap: 6px; opacity: 0.7;
+}
+.swipe-hint span { color: var(--pink); }
+
+.gallery-dots { display: flex; gap: 8px; align-items: center; }
+.g-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,45,120,0.3);
+  border: 1px solid rgba(255,45,120,0.4);
+  transition: background 0.25s, transform 0.25s, width 0.25s;
+  cursor: pointer;
+}
+.g-dot.active {
+  background: var(--pink); width: 20px; border-radius: 100px;
+  box-shadow: 0 0 8px rgba(255,45,120,0.5);
+}
+
+.gallery-nav { display: flex; gap: 10px; align-items: center; }
+.g-arrow {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(255,45,120,0.08);
+  border: 1px solid rgba(255,45,120,0.2);
+  color: var(--pink-light); font-size: 1.1rem;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s, transform 0.2s, border-color 0.2s;
+  line-height: 1;
+}
+.g-arrow:hover { background: rgba(255,45,120,0.22); border-color: var(--pink); transform: scale(1.08); }
+.g-arrow:active { transform: scale(0.95); }
+
+.gallery-counter {
+  font-size: 0.75rem; color: var(--pink);
+  font-weight: 500; min-width: 36px; text-align: center;
+}
+
+.photo-caption {
+  font-size: 0.8rem; color: var(--muted);
+  text-align: center; min-height: 1.2em;
+  transition: opacity 0.3s; font-style: italic;
+}
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+.g-arrow.shake { animation: shake 0.35s ease; }
+
+@media (max-width: 540px) {
+  .gallery-panel { padding: 22px 18px 26px; gap: 18px; }
+  .card-stack { height: 230px; }
+  .photo-card { width: 185px; height: 230px; }
+}
+</style>
 </head>
 <body>
 
@@ -19,9 +246,7 @@
 <!-- NAV -->
 <nav>
   <div class="nav-logo">✦ Andin</div>
-
   <button class="nav-toggle" id="navToggle" aria-label="Buka menu" aria-expanded="false" aria-controls="navMenu">☰</button>
-
   <ul class="nav-links" id="navMenu">
     <li><a href="#about">Tentang</a></li>
     <li><a href="#education">Pendidikan</a></li>
@@ -31,7 +256,6 @@
     <li><a href="#contact">Kontak</a></li>
   </ul>
 </nav>
-
 
 <!-- HERO -->
 <section id="hero">
@@ -52,10 +276,7 @@
       </div>
       <div class="orbit-dot" style="top:-5px;left:50%;transform:translateX(-50%)"></div>
       <div class="orbit-dot" style="bottom:-5px;left:50%;transform:translateX(-50%)"></div>
-      <style>
-        /* allow user to change avatar just by editing this src */
-        #heroAvatar { content: url('asset/avatar.jpg'); }
-      </style>
+      <style>#heroAvatar { content: url('asset/avatar.jpg'); }</style>
     </div>
   </div>
   <span class="star-float" style="top:25%;left:52%;animation-delay:0s">✦</span>
@@ -84,10 +305,7 @@
   <div class="about-left reveal">
     <div class="big-initial">A</div>
     <p class="tagline">Halo! Ayo kenalan !🌸</p>
-    <p>Halo! Namaku Andin Sabila Janna, saya kerap dipanggil Andin. Seorang Mahasiswa Fakultas Ilmu Komputer, Jurusan Sistem Informasi di Universitas Sriwijaya. Saya adalah orang yang memiliki kemampuan adaptasi yang bagus dan bersemangat untuk belajar hal
-    baru. Selain itu, saya juga orang yang tertarik pada pengembangan diri melalui pengalaman organisasi dan kerja tim, dengan fokus pada
-    kontribusi nyata dalam lingkungan sekitar. Saat ini selain fokus belajar, saya juga aktif dalam berbagai organisasi kampus yang mendukung pengembangan minat dan keterampilan, terutama di bidang
-    akademik maupun non akademik</p>
+    <p>Halo! Namaku Andin Sabila Janna, saya kerap dipanggil Andin. Seorang Mahasiswa Fakultas Ilmu Komputer, Jurusan Sistem Informasi di Universitas Sriwijaya. Saya adalah orang yang memiliki kemampuan adaptasi yang bagus dan bersemangat untuk belajar hal baru. Selain itu, saya juga orang yang tertarik pada pengembangan diri melalui pengalaman organisasi dan kerja tim, dengan fokus pada kontribusi nyata dalam lingkungan sekitar. Saat ini selain fokus belajar, saya juga aktif dalam berbagai organisasi kampus yang mendukung pengembangan minat dan keterampilan, terutama di bidang akademik maupun non akademik</p>
     <div class="skills-row">
       <div class="skill-pill">🎨 Figma</div>
       <div class="skill-pill">💻 Front End Development</div>
@@ -165,36 +383,72 @@
   <div class="sec-label">Pengalaman Organisasi</div>
   <h2 class="sec-title reveal">Active <em>Organizations</em></h2>
   <div class="org-grid">
-    <div class="org-card">
+
+    <div class="org-card"
+      data-org-photos='[
+        {"src":"asset/rohis 3.jpeg","caption":""},
+        {"src":"asset/rhs2.jpeg","caption":""}
+      ]'>
       <div class="org-period">2021 – 2022</div>
       <div class="org-title">Bendahara Umum Rohis SMAN 13 Palembang</div>
       <div class="org-desc">Mengelola keuangan organisasi dengan akurasi dan transparansi. Aktif berkontribusi dalam kegiatan islami termasuk hari besar islam dan divisi nasyid.</div>
     </div>
-    <div class="org-card">
+
+    <div class="org-card"
+      data-org-photos='[
+        {"src":"asset/staff himsi 1.jpeg","caption":""},
+        {"src":"asset/him2.jpeg","caption":""}
+      ]'>
       <div class="org-period">2023 – 2024</div>
-      <div class="org-title">Staff Divisi Seni — Himpunan Mahasiswa Sistem Informasi (HIMSI)</div>
+      <div class="org-title">Staff Divisi Seni Himpunan Mahasiswa Sistem Informasi (HIMSI)</div>
       <div class="org-desc">Berpartisipasi dalam pelaksanaan kegiatan seni di proker HIMSI. Aktif di berbagai kepanitiaan termasuk videography, acara, dan konsumsi.</div>
     </div>
-    <div class="org-card">
+
+    <div class="org-card"
+      data-org-photos='[
+        {"src":"asset/pimphim1.jpeg","caption":""},
+        {"src":"asset/pimphim 2.jpeg","caption":""},
+        {"src":"asset/pimphim himsi 3.jpeg","caption":""},
+        {"src":"asset/pimphim 4.jpeg","caption":""}
+      ]'>
       <div class="org-period">2025</div>
-      <div class="org-title">Kepala Divisi Seni — Departemen Pengembangan Minat & Bakat HIMSI FASILKOM UNSRI</div>
+      <div class="org-title">Kepala Divisi Seni  Departemen Pengembangan Minat & Bakat HIMSI FASILKOM UNSRI</div>
       <div class="org-desc">Memastikan pelaksanaan program berjalan sesuai rencana dan tujuan divisi. Mewadahi seluruh staff HIMSI yang memiliki minat dan bakat di bidang seni.</div>
     </div>
-    <div class="org-card">
+
+    <div class="org-card"
+      data-org-photos='[
+        {"src":"asset/gdg 1.jpeg","caption":""},
+        {"src":"asset/gdg 2.jpeg","caption":""},
+        {"src":"asset/gdg 3.jpeg","caption":""},
+        {"src":"asset/gdg 4.jpeg","caption":""},
+      ]'>
       <div class="org-period">2025</div>
-      <div class="org-title">Anggota Divisi UI/UX — GDGoC UNSRI</div>
+      <div class="org-title">Anggota Divisi UI/UX GDGoC UNSRI</div>
       <div class="org-desc">Mengikuti pelatihan dan diskusi rutin mengenai desain UI/UX. Membuat beberapa proyek UIUX sesuai materi yang dipelajari. Aktif di kepanitiaan GDGoC UNSRI.</div>
     </div>
-    <div class="org-card">
+
+    <div class="org-card"
+      data-org-photos='[
+        {"src":"asset/vdk1.jpeg","caption":""},
+        {"src":"asset/vdk3.png","caption":""}
+      ]'>
       <div class="org-period">2024</div>
-      <div class="org-title">Anggota Divisi Videography & Documentation — Sifest UNSRI 2024</div>
+      <div class="org-title">Anggota Divisi Videography & Documentation Sifest UNSRI 2024</div>
       <div class="org-desc">Mendokumentasikan acara, podcast, kompetisi, dan mengedit keperluan video untuk SIFEST UNSRI 2024.</div>
     </div>
-    <div class="org-card">
-      <div class="org-period">2025 </div>
-      <div class="org-title">Steering Committee — Marketing Sub Divisi Promotion SIFEST 2025</div>
+
+    <div class="org-card"
+      data-org-photos='[
+        {"src":"asset/mark11.jpeg","caption":""},
+        {"src":"asset/mrk 2.jpeg","caption":""},
+        {"src":"asset/mark 1.jpeg","caption":""}
+      ]'>
+      <div class="org-period">2025</div>
+      <div class="org-title">Steering Committee Marketing Sub Divisi Promotion SIFEST 2025</div>
       <div class="org-desc">Menghandle anggota dan organization committee dalam pembuatan konten promosi. Menjadi penasihat divisi dalam pengendalian kegiatan secara rinci.</div>
     </div>
+
   </div>
 </section>
 
@@ -206,16 +460,14 @@
 
     <div class="proj-card">
       <div class="proj-thumb" style="background:linear-gradient(135deg,#3d0035,#1a0a1a)">
-        <img class="proj-thumb-img" src="/asset/cupcakecorner.png" alt="Foto proyek 01">
+        <img class="proj-thumb-img" src="asset/cupcakecorner.png" alt="Foto proyek 01">
       </div>
       <div class="proj-body">
         <div class="proj-num">Proyek 01</div>
         <div class="proj-name">Cupcake Corner</div>
         <div class="proj-desc">Website e-commerce sederhana untuk pemesanan cupcake secara online, lengkap dengan halaman login, dashboard admin, dan database.</div>
         <div class="proj-tags">
-          <span class="tag">Web Dev</span>
-          <span class="tag">E-commerce</span>
-          <span class="tag">Database</span>
+          <span class="tag">Web Dev</span><span class="tag">E-commerce</span><span class="tag">Database</span>
         </div>
         <a href="https://github.com/andien-123/cupcake.git" target="_blank" rel="noopener" class="proj-link">Lihat Proyek →</a>
       </div>
@@ -223,16 +475,14 @@
 
     <div class="proj-card">
       <div class="proj-thumb" style="background:linear-gradient(135deg,#3d0035,#1a0a1a)">
-        <img class="proj-thumb-img" src="/asset/redesignfe.png" alt="Foto proyek 01">
+        <img class="proj-thumb-img" src="asset/redesignfe.png" alt="Foto proyek 02">
       </div>
       <div class="proj-body">
         <div class="proj-num">Proyek 02</div>
         <div class="proj-name">Redesign Halaman Beranda Front End Website Fasilkom Unsri</div>
         <div class="proj-desc">Challange untuk meredesign website Fasilkom Unsri yang diadakan oleh GDGoC Unsri 2025</div>
         <div class="proj-tags">
-          <span class="tag">Web Dev</span>
-          <span class="tag">Redesign</span>
-          <span class="tag">Database</span>
+          <span class="tag">Web Dev</span><span class="tag">Redesign</span><span class="tag">Database</span>
         </div>
         <a href="https://github.com/andien-123/Redesign-Challange---Website-Fasilkom-Unsri" target="_blank" rel="noopener" class="proj-link">Lihat Proyek →</a>
       </div>
@@ -240,33 +490,29 @@
 
     <div class="proj-card">
       <div class="proj-thumb" style="background:linear-gradient(135deg,#0a1a3d,#001a2d)">
-        <img class="proj-thumb-img" src="/asset/GDSkyConnect.png" alt="Foto proyek 02">
+        <img class="proj-thumb-img" src="asset/GDSkyConnect.png" alt="Foto proyek 03">
       </div>
       <div class="proj-body">
         <div class="proj-num">Proyek 03</div>
-        <div class="proj-name">GDSkyConnect (Perojek UI/UX Pertama Saya)</div>
+        <div class="proj-name">GDSkyConnect (Proyek UI/UX Pertama Saya)</div>
         <div class="proj-desc">Aplikasi mobile untuk memesan tiket pesawat secara online, pemesanan hotel/vila, dan kemudahan proses reschedule pemesanan tiket.</div>
         <div class="proj-tags">
-          <span class="tag">UI Design</span>
-          <span class="tag">Figma</span>
-          <span class="tag">Mobile App Design</span>
+          <span class="tag">UI Design</span><span class="tag">Figma</span><span class="tag">Mobile App Design</span>
         </div>
-        <a href="https://www.figma.com target="_blank" rel="noopener" class="proj-link">Lihat Proyek →</a>
+        <a href="https://www.figma.com" target="_blank" rel="noopener" class="proj-link">Lihat Proyek →</a>
       </div>
     </div>
 
     <div class="proj-card">
       <div class="proj-thumb" style="background:linear-gradient(135deg,#002a3d,#0a1a2a)">
-        <img class="proj-thumb-img" src="/asset/SocialBlooom.png" alt="Foto proyek 03">
+        <img class="proj-thumb-img" src="asset/SocialBlooom.png" alt="Foto proyek 04">
       </div>
       <div class="proj-body">
         <div class="proj-num">Proyek 04</div>
         <div class="proj-name">SocialBloom</div>
         <div class="proj-desc">Aplikasi mobile interaktif untuk melatih keterampilan interaksi sosial anak dengan Autism Spectrum Disorder (ASD) menggunakan pendekatan visual-kinestetik.</div>
         <div class="proj-tags">
-          <span class="tag">UI/UX</span>
-          <span class="tag">Accessibility</span>
-          <span class="tag">Penyandang Disabilitias</span>
+          <span class="tag">UI/UX</span><span class="tag">Accessibility</span><span class="tag">Penyandang Disabilitas</span>
         </div>
         <a href="https://www.figma.com/proto/N9FT2oK05E5cuSNXnSKCfG/projek-ux-socialbloom?page-id=0%3A1&node-id=592-2009&viewport=5462%2C-2708%2C0.32&t=OBUhJbFLRpBgyTad-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=638%3A1507" target="_blank" rel="noopener" class="proj-link">Lihat Proyek →</a>
       </div>
@@ -274,16 +520,14 @@
 
     <div class="proj-card">
       <div class="proj-thumb" style="background:linear-gradient(135deg,#003d2a,#001a15)">
-        <img class="proj-thumb-img" src="/asset/Prima+.png" alt="Foto proyek 04">
+        <img class="proj-thumb-img" src="asset/Prima+.png" alt="Foto proyek 05">
       </div>
       <div class="proj-body">
         <div class="proj-num">Proyek 05</div>
         <div class="proj-name">Prima+</div>
         <div class="proj-desc">Aplikasi konsultasi kesehatan online yang dirancang khusus untuk mempermudah para lansia mengakses layanan medis dengan tampilan sederhana dan ramah pengguna.</div>
         <div class="proj-tags">
-          <span class="tag">UI/UX</span>
-          <span class="tag">Healthcare</span>
-          <span class="tag">Lansia</span>
+          <span class="tag">UI/UX</span><span class="tag">Healthcare</span><span class="tag">Lansia</span>
         </div>
         <a href="https://www.figma.com/proto/GXjeN8zCdpGRxkeOSIi5bo/GREEN-TEAM?page-id=0%3A1&node-id=280-1338&viewport=346%2C-101%2C0.23&t=V1FGYtZk10r6l9SZ-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=18%3A45&show-proto-sidebar=1" target="_blank" rel="noopener" class="proj-link">Lihat Proyek →</a>
       </div>
@@ -291,15 +535,14 @@
 
     <div class="proj-card">
       <div class="proj-thumb" style="background:linear-gradient(135deg,#1a003d,#0a001a)">
-        <img class="proj-thumb-img" src="/asset/sirkulasii.png" alt="Foto proyek 05">
+        <img class="proj-thumb-img" src="asset/sirkulasii.png" alt="Foto proyek 06">
       </div>
       <div class="proj-body">
         <div class="proj-num">Proyek 06</div>
         <div class="proj-name">Sirkulasi</div>
-        <div class="proj-desc">Aplikasi yang dirancang untuk membantu masyarakat, dalam mengelola sampah secara praktis, teratur, dan berkelanjutan melalui teknologi digital. </div>
+        <div class="proj-desc">Aplikasi yang dirancang untuk membantu masyarakat dalam mengelola sampah secara praktis, teratur, dan berkelanjutan melalui teknologi digital.</div>
         <div class="proj-tags">
-          <span class="tag">UI/UX</span>
-          <span class="tag">Green Environment</span>
+          <span class="tag">UI/UX</span><span class="tag">Green Environment</span>
         </div>
         <a href="https://www.figma.com/proto/cu5UW7dR4IDN14Q8ViPv9E/PROJEK-AKHIR-UIUX?node-id=263-1869&viewport=685%2C481%2C0.14&t=NBeuSNzODvwrmB3Q-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=91%3A112&show-proto-sidebar=1&page-id=0%3A1" target="_blank" rel="noopener" class="proj-link">Lihat Proyek →</a>
       </div>
@@ -307,16 +550,14 @@
 
     <div class="proj-card">
       <div class="proj-thumb" style="background:linear-gradient(135deg,#003d2a,#001a10)">
-        <img class="proj-thumb-img" src="/asset/AptiTrack.png" alt="Foto proyek 06">
+        <img class="proj-thumb-img" src="asset/AptiTrack.png" alt="Foto proyek 07">
       </div>
       <div class="proj-body">
         <div class="proj-num">Proyek 07</div>
         <div class="proj-name">Aptitrack (with Diskominfo OI)</div>
         <div class="proj-desc">AptiTrack adalah aplikasi yang dibuat untuk membantu programmer di DISKOMINFO OGAN ILIR dalam mengatur tugas, memantau progres project, dan meningkatkan manajemen pekerjaan tim secara lebih terstruktur dan efisien.</div>
         <div class="proj-tags">
-          <span class="tag">Web Design</span>
-          <span class="tag">E-Government</span>
-          <span class="tag">Management</span>
+          <span class="tag">Web Design</span><span class="tag">E-Government</span><span class="tag">Management</span>
         </div>
         <a href="https://www.figma.com/proto/hKvdBxnKtaa04FHx2ABOYf/UIUX?page-id=282%3A60&node-id=2246-12837&viewport=2332%2C2321%2C0.21&t=24tFVX8CMrg5Gg6R-1&scaling=min-zoom&content-scaling=fixed&starting-point-node-id=578%3A2360" target="_blank" rel="noopener" class="proj-link">Lihat Proyek →</a>
       </div>
@@ -332,37 +573,44 @@
   <div class="cert-wrap">
     <div class="cert-scroll">
       <div class="cert-card reveal">
-        <img class="cert-img" src="/asset/ANDIN SABILLA JANNA.png" alt="Sertifikat 01">
+        <img class="cert-img" src="asset/ANDIN SABILLA JANNA.png" alt="Sertifikat 01">
         <div class="cert-body">
           <div class="cert-title">Staff Videography & Documentation</div>
           <div class="cert-meta">2024</div>
         </div>
       </div>
       <div class="cert-card reveal">
-        <img class="cert-img" src="/asset/bfp.png" alt="Sertifikat 02">
+        <img class="cert-img" src="asset/bfp.png" alt="Sertifikat 02">
         <div class="cert-body">
-          <div class="cert-title">Best Final Project UI/UX GDGoC </div>
+          <div class="cert-title">Best Final Project UI/UX GDGoC</div>
           <div class="cert-meta">2025</div>
         </div>
       </div>
       <div class="cert-card reveal">
-        <img class="cert-img" src="/asset/memb uiux.png" alt="Sertifikat 03">
+        <img class="cert-img" src="asset/memb uiux.png" alt="Sertifikat 03">
         <div class="cert-body">
           <div class="cert-title">Member UI/UX GDGoC</div>
           <div class="cert-meta">2025</div>
         </div>
       </div>
       <div class="cert-card reveal">
-        <img class="cert-img" src="/asset/porgeselsi.png" alt="Sertifikat 02">
+        <img class="cert-img" src="asset/porgeselsi.png" alt="Sertifikat 04">
         <div class="cert-body">
-          <div class="cert-title">PJ Acara Lomba Seni (Pekan Olahraga & Seni Sisfor) </div>
+          <div class="cert-title">PJ Acara Lomba Seni (Pekan Olahraga & Seni Sisfor)</div>
           <div class="cert-meta">2025</div>
         </div>
       </div>
       <div class="cert-card reveal">
-        <img class="cert-img" src="/asset/promotion.jpeg" alt="Sertifikat 02">
+        <img class="cert-img" src="asset/promotion.jpeg" alt="Sertifikat 05">
         <div class="cert-body">
-          <div class="cert-title">Steering Committee Marketing Sub Divisi Promotion SIFEST 2025 </div>
+          <div class="cert-title">Steering Committee Marketing Sub Divisi Promotion SIFEST 2025</div>
+          <div class="cert-meta">2025</div>
+        </div>
+      </div>
+      <div class="cert-card reveal">
+        <img class="cert-img" src="/asset/studyjam.png" alt="Sertifikat 06">
+        <div class="cert-body">
+          <div class="cert-title">Panitia Kurikulum Study Jam UI/UX GDGoC</div>
           <div class="cert-meta">2025</div>
         </div>
       </div>
@@ -382,17 +630,13 @@
         <div class="cl">Email</div>
         <div class="cv">andiensj123@gmail.com</div>
       </a>
-    <a href="https://instagram.com/ddien.s" target="_blank" rel="noopener" class="contact-card">
+      <a href="https://instagram.com/ddien.s" target="_blank" rel="noopener" class="contact-card">
         <div class="ci">📸</div>
-
         <div class="cl">Instagram</div>
         <div class="cv">@ddien.s</div>
       </a>
     </div>
-    <a 
-  href="mailto:andiensj123@gmail.com?subject=Halo%20Andin&body=Halo%20Andin,%20saya%20ingin%20menghubungi%20Anda."
-  class="btn-primary"
->Kirim Pesan ✉️</a>
+    <a href="mailto:andiensj123@gmail.com?subject=Halo%20Andin&body=Halo%20Andin,%20saya%20ingin%20menghubungi%20Anda." class="btn-primary">Kirim Pesan ✉️</a>
   </div>
 </section>
 
@@ -403,107 +647,232 @@
 </footer>
 
 <script>
-  // CURSOR
-  const cursor = document.getElementById('cursor');
-  const cursorRing = document.getElementById('cursorRing');
-  let mx=0,my=0,rx=0,ry=0;
-  document.addEventListener('mousemove', e => {
-    mx=e.clientX; my=e.clientY;
-    cursor.style.left=mx+'px'; cursor.style.top=my+'px';
-  });
-  function animRing(){
-    rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
-    cursorRing.style.left=rx+'px'; cursorRing.style.top=ry+'px';
-    requestAnimationFrame(animRing);
-  }
-  animRing();
+/* ═══════════════════════════════════════
+   ORIGINAL SCRIPTS
+═══════════════════════════════════════ */
 
-  // SPARKLES ON CLICK
-  document.addEventListener('click', e => {
-    for(let i=0;i<6;i++){
-      const s=document.createElement('div');
-      s.classList.add('sparkle');
-      s.style.left=(e.clientX+Math.random()*30-15)+'px';
-      s.style.top=(e.clientY+Math.random()*30-15)+'px';
-      s.style.fontSize=(Math.random()*14+8)+'px';
-      s.innerHTML = Math.random()>0.5?'✦':'✧';
-      s.style.color = 'hsl('+(340+Math.random()*40)+',100%,'+(60+Math.random()*20)+'%)';
-      document.body.appendChild(s);
-      setTimeout(()=>s.remove(),800);
+// CURSOR
+const cursor = document.getElementById('cursor');
+const cursorRing = document.getElementById('cursorRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => {
+  mx=e.clientX; my=e.clientY;
+  cursor.style.left=mx+'px'; cursor.style.top=my+'px';
+});
+function animRing(){
+  rx+=(mx-rx)*0.12; ry+=(my-ry)*0.12;
+  cursorRing.style.left=rx+'px'; cursorRing.style.top=ry+'px';
+  requestAnimationFrame(animRing);
+}
+animRing();
+
+// SPARKLES ON CLICK
+document.addEventListener('click', e => {
+  for(let i=0;i<6;i++){
+    const s=document.createElement('div');
+    s.classList.add('sparkle');
+    s.style.left=(e.clientX+Math.random()*30-15)+'px';
+    s.style.top=(e.clientY+Math.random()*30-15)+'px';
+    s.style.fontSize=(Math.random()*14+8)+'px';
+    s.innerHTML = Math.random()>0.5?'✦':'✧';
+    s.style.color='hsl('+(340+Math.random()*40)+',100%,'+(60+Math.random()*20)+'%)';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),800);
+  }
+});
+
+// BUBBLES BG
+const bc = document.getElementById('bubblesContainer');
+[{w:400,h:400,t:10,l:5,dur:8},{w:300,h:300,t:60,l:80,dur:11},{w:500,h:500,t:30,l:40,dur:13},{w:200,h:200,t:80,l:20,dur:7},{w:350,h:350,t:5,l:65,dur:10}]
+.forEach(b=>{
+  const el=document.createElement('div');
+  el.classList.add('bubble');
+  el.style.cssText=`width:${b.w}px;height:${b.h}px;top:${b.t}%;left:${b.l}%;animation-duration:${b.dur}s`;
+  bc.appendChild(el);
+});
+
+// SCROLL REVEAL
+const reveals = document.querySelectorAll('.reveal,.org-card,.proj-card,.edu-item,.cert-card');
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('visible'), i*80);
+      obs.unobserve(e.target);
     }
   });
+},{threshold:0.12});
+reveals.forEach(el=>obs.observe(el));
 
-  // BUBBLES BG
-  const bc = document.getElementById('bubblesContainer');
-  const bubbleData = [
-    {w:400,h:400,t:10,l:5,dur:8},
-    {w:300,h:300,t:60,l:80,dur:11},
-    {w:500,h:500,t:30,l:40,dur:13},
-    {w:200,h:200,t:80,l:20,dur:7},
-    {w:350,h:350,t:5,l:65,dur:10},
-  ];
-  bubbleData.forEach(b=>{
-    const el=document.createElement('div');
-    el.classList.add('bubble');
-    el.style.cssText=`width:${b.w}px;height:${b.h}px;top:${b.t}%;left:${b.l}%;animation-duration:${b.dur}s`;
-    bc.appendChild(el);
-  });
+// NAV HOVER CURSOR
+document.querySelectorAll('a,button,.btn-primary,.btn-outline,.proj-card,.org-card,.cert-card').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{ cursor.style.width='20px'; cursor.style.height='20px'; cursorRing.style.width='50px'; cursorRing.style.height='50px'; });
+  el.addEventListener('mouseleave',()=>{ cursor.style.width='14px'; cursor.style.height='14px'; cursorRing.style.width='36px'; cursorRing.style.height='36px'; });
+});
 
-  // SCROLL REVEAL
-  const reveals = document.querySelectorAll('.reveal,.org-card,.proj-card,.edu-item,.cert-card');
-  const obs = new IntersectionObserver(entries=>{
-    entries.forEach((e,i)=>{
-      if(e.isIntersecting){
-        setTimeout(()=>e.target.classList.add('visible'), i*80);
-        obs.unobserve(e.target);
-      }
-    });
-  },{threshold:0.12});
-  reveals.forEach(el=>obs.observe(el));
+// NAV TOGGLE
+const navToggle = document.getElementById('navToggle');
+const navMenu   = document.getElementById('navMenu');
+if(navToggle && navMenu){
+  const setOpen=(isOpen)=>{ navMenu.classList.toggle('open',isOpen); navToggle.setAttribute('aria-expanded',String(isOpen)); };
+  navToggle.addEventListener('click',e=>{ e.stopPropagation(); setOpen(!navMenu.classList.contains('open')); });
+  navMenu.querySelectorAll('a').forEach(link=>link.addEventListener('click',()=>setOpen(false)));
+  document.addEventListener('click',()=>{ if(navMenu.classList.contains('open')) setOpen(false); });
+  navMenu.addEventListener('click',e=>e.stopPropagation());
+}
 
-  // NAV HOVER CURSOR
-  document.querySelectorAll('a,button,.btn-primary,.btn-outline,.proj-card,.org-card,.cert-card').forEach(el=>{
-    el.addEventListener('mouseenter',()=>{
-      cursor.style.width='20px'; cursor.style.height='20px';
-      cursorRing.style.width='50px'; cursorRing.style.height='50px';
-    });
-    el.addEventListener('mouseleave',()=>{
-      cursor.style.width='14px'; cursor.style.height='14px';
-      cursorRing.style.width='36px'; cursorRing.style.height='36px';
-    });
-  });
+/* ═══════════════════════════════════════
+   GALLERY POPUP — Stacked Card Effect
+═══════════════════════════════════════ */
+(function(){
 
-  // NAV TOGGLE (Mobile hamburger)
-  const navToggle = document.getElementById('navToggle');
-  const navMenu = document.getElementById('navMenu');
+  /* Inject overlay HTML */
+  const overlay = document.createElement('div');
+  overlay.id = 'galleryOverlay';
+  overlay.innerHTML = `
+    <div class="gallery-panel" role="dialog" aria-modal="true" aria-label="Galeri Foto Organisasi">
+      <div class="gallery-header">
+        <div class="gallery-title-wrap">
+          <div class="gallery-label">📸 Dokumentasi</div>
+          <div class="gallery-title" id="galleryTitle"></div>
+        </div>
+        <button class="gallery-close" id="galleryClose" aria-label="Tutup galeri">✕</button>
+      </div>
+      <div class="card-stack" id="cardStack" role="region" aria-label="Geser foto untuk melihat selanjutnya"></div>
+      <div class="swipe-hint"><span>←</span> geser kartu atau klik panah <span>→</span></div>
+      <div style="display:flex;align-items:center;gap:14px;">
+        <button class="g-arrow" id="gPrev" aria-label="Foto sebelumnya">‹</button>
+        <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+          <div class="gallery-dots" id="galleryDots"></div>
+          <div class="gallery-counter" id="galleryCounter">1 / 3</div>
+        </div>
+        <button class="g-arrow" id="gNext" aria-label="Foto berikutnya">›</button>
+      </div>
+      <div class="photo-caption" id="photoCaption"></div>
+    </div>`;
+  document.body.appendChild(overlay);
 
-  if(navToggle && navMenu){
-    const setOpen = (isOpen)=>{
-      navMenu.classList.toggle('open', isOpen);
-      navToggle.setAttribute('aria-expanded', String(isOpen));
+  /* State */
+  let photos=[], currentIndex=0, isAnimating=false;
+  const stack      = document.getElementById('cardStack');
+  const titleEl    = document.getElementById('galleryTitle');
+  const dotsEl     = document.getElementById('galleryDots');
+  const counterEl  = document.getElementById('galleryCounter');
+  const captionEl  = document.getElementById('photoCaption');
+  const btnClose   = document.getElementById('galleryClose');
+  const btnPrev    = document.getElementById('gPrev');
+  const btnNext    = document.getElementById('gNext');
+
+  /* Open / Close */
+  function openGallery(orgName, photoArr){
+    photos=photoArr; currentIndex=0;
+    titleEl.textContent=orgName;
+    buildStack(); updateMeta();
+    overlay.classList.add('active');
+    document.body.style.overflow='hidden';
+  }
+  function closeGallery(){
+    overlay.classList.remove('active');
+    document.body.style.overflow='';
+    setTimeout(()=>{ stack.innerHTML=''; },450);
+  }
+
+  /* Build card stack */
+  function buildStack(){
+    stack.innerHTML='';
+    const total=photos.length, slots=Math.min(3,total);
+    for(let slot=slots-1; slot>=0; slot--){
+      const idx=(currentIndex+slot)%total;
+      stack.appendChild(createCard(photos[idx], slot));
+    }
+  }
+
+  function createCard(photo, pos){
+    const card=document.createElement('div');
+    card.className='photo-card';
+    card.dataset.pos=pos;
+    const img=new Image();
+    img.alt=photo.caption||'Foto dokumentasi';
+    img.loading='lazy';
+    img.onerror=()=>{
+      card.style.background='linear-gradient(135deg,#3d0035,#1a0a2e)';
+      card.innerHTML=`<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px;text-align:center;"><div style="font-size:2.5rem;opacity:0.5">📷</div><div style="font-size:0.7rem;color:rgba(255,45,120,0.7);letter-spacing:0.06em;">Tambahkan foto di:<br>${photo.src}</div></div>`;
     };
+    img.src=photo.src;
+    card.appendChild(img);
+    if(pos===0) enableDrag(card);
+    return card;
+  }
 
-    navToggle.addEventListener('click', (e)=>{
-      e.stopPropagation();
-      const isOpen = navMenu.classList.contains('open');
-      setOpen(!isOpen);
-    });
+  /* Drag / swipe */
+  function enableDrag(card){
+    let startX=0, dx=0, dy=0, dragging=false;
+    function onStart(e){ if(isAnimating) return; const pt=e.touches?e.touches[0]:e; startX=pt.clientX; dragging=true; card.style.transition='none'; }
+    function onMove(e){ if(!dragging) return; const pt=e.touches?e.touches[0]:e; dx=pt.clientX-startX; dy=(e.touches?e.touches[0]:e).clientY-(e.touches?e.touches[0].clientY:e.clientY); const rot=dx*0.07; card.style.transform=`rotate(${1+rot}deg) translateX(${4+dx}px) scale(1)`; card.style.filter=dx>40?'brightness(1.08)':dx<-40?'brightness(0.85)':'brightness(1)'; }
+    function onEnd(){ if(!dragging) return; dragging=false; card.style.transition=''; card.style.filter=''; if(dx>60) advance('right'); else if(dx<-60) advance('left'); else { card.style.transition='transform 0.35s cubic-bezier(0.34,1.56,0.64,1)'; card.style.transform='rotate(1deg) translateX(4px) scale(1)'; } dx=0; }
+    card.addEventListener('mousedown',onStart);
+    card.addEventListener('touchstart',onStart,{passive:true});
+    window.addEventListener('mousemove',onMove);
+    window.addEventListener('touchmove',onMove,{passive:true});
+    window.addEventListener('mouseup',onEnd);
+    window.addEventListener('touchend',onEnd);
+  }
 
-    // Tutup menu saat klik salah satu item
-    navMenu.querySelectorAll('a').forEach(link=>{
-      link.addEventListener('click', ()=> setOpen(false));
-    });
+  /* Advance photo */
+  function advance(dir){
+    if(isAnimating||photos.length<=1) return;
+    isAnimating=true;
+    const frontCard=stack.querySelector('[data-pos="0"]');
+    const cls=dir==='right'?'fly-right':'fly-left';
+    currentIndex=dir==='right'?(currentIndex+1)%photos.length:(currentIndex-1+photos.length)%photos.length;
+    frontCard.classList.add(cls);
+    frontCard.style.zIndex=10;
+    const remaining=[...stack.querySelectorAll('.photo-card:not(.'+cls+')')];
+    remaining.forEach((c,i)=>{ const np=remaining.length-1-i; c.classList.add('transitioning'); c.dataset.pos=np; if(np===0) enableDrag(c); });
+    setTimeout(()=>{
+      frontCard.remove();
+      if(photos.length>1){ const ni=(currentIndex+2)%photos.length; const nc=createCard(photos[ni],2); nc.classList.add('entering'); stack.insertBefore(nc,stack.firstChild); setTimeout(()=>nc.classList.remove('entering'),450); }
+      remaining.forEach(c=>c.classList.remove('transitioning'));
+      updateMeta(); isAnimating=false;
+    },500);
+    updateMeta();
+  }
 
-    // Tutup menu kalau klik area luar
-    document.addEventListener('click', ()=>{
-      if(navMenu.classList.contains('open')) setOpen(false);
-    });
-
-    // Jangan tutup langsung saat klik tombol (stopPropagation sudah cukup)
-    navMenu.addEventListener('click', (e)=>{
-      e.stopPropagation();
+  /* Meta */
+  function updateMeta(){
+    counterEl.textContent=`${currentIndex+1} / ${photos.length}`;
+    captionEl.style.opacity='0';
+    setTimeout(()=>{ captionEl.textContent=photos[currentIndex]?.caption||''; captionEl.style.opacity='1'; },200);
+    dotsEl.innerHTML='';
+    photos.forEach((_,i)=>{
+      const d=document.createElement('div');
+      d.className='g-dot'+(i===currentIndex?' active':'');
+      d.addEventListener('click',()=>{ if(i===currentIndex||isAnimating) return; advance(i>currentIndex?'right':'left'); });
+      dotsEl.appendChild(d);
     });
   }
+
+  /* Button events */
+  btnClose.addEventListener('click', closeGallery);
+  overlay.addEventListener('click', e=>{ if(e.target===overlay) closeGallery(); });
+  btnNext.addEventListener('click',()=>{ if(photos.length<=1){ btnNext.classList.add('shake'); setTimeout(()=>btnNext.classList.remove('shake'),350); return; } advance('right'); });
+  btnPrev.addEventListener('click',()=>{ if(photos.length<=1){ btnPrev.classList.add('shake'); setTimeout(()=>btnPrev.classList.remove('shake'),350); return; } advance('left'); });
+  document.addEventListener('keydown',e=>{ if(!overlay.classList.contains('active')) return; if(e.key==='Escape') closeGallery(); if(e.key==='ArrowRight') advance('right'); if(e.key==='ArrowLeft') advance('left'); });
+
+  /* Bind org cards — baca data-org-photos dari HTML */
+  document.querySelectorAll('.org-card[data-org-photos]').forEach(card=>{
+    const badge=document.createElement('div');
+    badge.className='org-card-badge';
+    badge.innerHTML='📷 &nbsp;Lihat Dokumentasi';
+    card.appendChild(badge);
+    card.addEventListener('click',()=>{
+      const orgName=card.querySelector('.org-title')?.textContent||'Organisasi';
+      let photoArr=[];
+      try { photoArr=JSON.parse(card.dataset.orgPhotos); } catch(e){ console.warn('Data foto error',e); }
+      if(photoArr.length) openGallery(orgName, photoArr);
+    });
+  });
+
+})();
 </script>
 </body>
 </html>
