@@ -6,233 +6,6 @@
 <title>Andin Sabilla Janna — Portfolio</title>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
-<style>
-/* ══════════════════════════════════════════
-   GALLERY POPUP — Stacked Card Style
-══════════════════════════════════════════ */
-
-.org-card { cursor: pointer; }
-.org-card-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 5px;
-  margin-top: 10px;
-  background: var(--pink-glow);
-  border: 1px solid var(--border);
-  color: var(--pink-light);
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  padding: 3px 10px;
-  border-radius: 100px;
-  opacity: 0.85;
-  transition: opacity 0.2s;
-}
-.org-card:hover .org-card-badge { opacity: 1; }
-
-#galleryOverlay {
-  position: fixed;
-  inset: 0;
-  z-index: 10000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(8,0,8,0);
-  backdrop-filter: blur(0px);
-  -webkit-backdrop-filter: blur(0px);
-  transition: background 0.45s ease, backdrop-filter 0.45s ease;
-  pointer-events: none;
-  padding: 20px;
-}
-#galleryOverlay.active {
-  background: rgba(8,0,8,0.82);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  pointer-events: all;
-}
-
-.gallery-panel {
-  position: relative;
-  width: min(480px, 92vw);
-  background: #1a0018;
-  border: 1px solid rgba(255,45,120,0.25);
-  border-radius: 28px;
-  padding: 28px 28px 32px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 22px;
-  transform: scale(0.82) translateY(40px);
-  opacity: 0;
-  transition: transform 0.45s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s ease;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,45,120,0.1);
-}
-#galleryOverlay.active .gallery-panel {
-  transform: scale(1) translateY(0);
-  opacity: 1;
-}
-
-.gallery-header {
-  width: 100%;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 12px;
-}
-.gallery-title-wrap { flex: 1; }
-.gallery-label {
-  font-size: 0.65rem;
-  color: var(--pink);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  margin-bottom: 4px;
-}
-.gallery-title {
-  font-family: 'Playfair Display', serif;
-  font-style: italic;
-  font-size: 1.05rem;
-  line-height: 1.35;
-  color: var(--white);
-}
-.gallery-close {
-  width: 36px; height: 36px;
-  flex-shrink: 0;
-  border-radius: 50%;
-  background: rgba(255,45,120,0.1);
-  border: 1px solid rgba(255,45,120,0.2);
-  color: var(--pink-light);
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem;
-  transition: background 0.2s, transform 0.2s;
-  line-height: 1;
-}
-.gallery-close:hover { background: rgba(255,45,120,0.25); transform: rotate(90deg); }
-
-.card-stack {
-  position: relative;
-  width: 100%;
-  height: 270px;
-  display: flex; align-items: center; justify-content: center;
-  user-select: none; -webkit-user-select: none;
-}
-
-.photo-card {
-  position: absolute;
-  width: 220px; height: 270px;
-  border-radius: 20px;
-  overflow: hidden;
-  border: 1px solid rgba(255,45,120,0.2);
-  box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-  cursor: grab;
-  will-change: transform;
-  touch-action: none;
-}
-.photo-card:active { cursor: grabbing; }
-.photo-card img {
-  width: 100%; height: 100%;
-  object-fit: cover; display: block;
-  pointer-events: none; border-radius: 20px;
-}
-
-.photo-card[data-pos="2"] {
-  transform: rotate(-10deg) translateX(-32px) translateY(8px) scale(0.9);
-  z-index: 1; filter: brightness(0.7);
-}
-.photo-card[data-pos="1"] {
-  transform: rotate(-4deg) translateX(-14px) translateY(2px) scale(0.95);
-  z-index: 2; filter: brightness(0.85);
-}
-.photo-card[data-pos="0"] {
-  transform: rotate(1deg) translateX(4px) translateY(0px) scale(1);
-  z-index: 3; filter: brightness(1);
-  box-shadow: 0 24px 60px rgba(255,45,120,0.25), 0 0 0 1px rgba(255,45,120,0.3);
-}
-
-.photo-card.transitioning {
-  transition: transform 0.45s cubic-bezier(0.22,1,0.36,1),
-              filter 0.4s ease, z-index 0s 0.22s, box-shadow 0.4s ease;
-}
-
-@keyframes flyOut {
-  0%   { transform: rotate(1deg) translateX(4px) scale(1); opacity:1; }
-  40%  { opacity:1; }
-  100% { transform: rotate(28deg) translateX(160px) translateY(-60px) scale(0.8); opacity:0; }
-}
-@keyframes flyOutLeft {
-  0%   { transform: rotate(1deg) translateX(4px) scale(1); opacity:1; }
-  40%  { opacity:1; }
-  100% { transform: rotate(-28deg) translateX(-160px) translateY(-60px) scale(0.8); opacity:0; }
-}
-.photo-card.fly-right { animation: flyOut 0.5s cubic-bezier(0.4,0,0.7,0.4) forwards; }
-.photo-card.fly-left  { animation: flyOutLeft 0.5s cubic-bezier(0.4,0,0.7,0.4) forwards; }
-
-@keyframes entryFromBack {
-  0%   { transform: rotate(-14deg) translateX(-50px) translateY(15px) scale(0.82); filter:brightness(0.6); opacity:0; }
-  100% { transform: rotate(-10deg) translateX(-32px) translateY(8px) scale(0.9); filter:brightness(0.7); opacity:1; }
-}
-.photo-card.entering { animation: entryFromBack 0.45s cubic-bezier(0.34,1.2,0.64,1) forwards; }
-
-.swipe-hint {
-  font-size: 0.72rem; color: var(--muted);
-  letter-spacing: 0.06em;
-  display: flex; align-items: center; gap: 6px; opacity: 0.7;
-}
-.swipe-hint span { color: var(--pink); }
-
-.gallery-dots { display: flex; gap: 8px; align-items: center; }
-.g-dot {
-  width: 6px; height: 6px; border-radius: 50%;
-  background: rgba(255,45,120,0.3);
-  border: 1px solid rgba(255,45,120,0.4);
-  transition: background 0.25s, transform 0.25s, width 0.25s;
-  cursor: pointer;
-}
-.g-dot.active {
-  background: var(--pink); width: 20px; border-radius: 100px;
-  box-shadow: 0 0 8px rgba(255,45,120,0.5);
-}
-
-.gallery-nav { display: flex; gap: 10px; align-items: center; }
-.g-arrow {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: rgba(255,45,120,0.08);
-  border: 1px solid rgba(255,45,120,0.2);
-  color: var(--pink-light); font-size: 1.1rem;
-  cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: background 0.2s, transform 0.2s, border-color 0.2s;
-  line-height: 1;
-}
-.g-arrow:hover { background: rgba(255,45,120,0.22); border-color: var(--pink); transform: scale(1.08); }
-.g-arrow:active { transform: scale(0.95); }
-
-.gallery-counter {
-  font-size: 0.75rem; color: var(--pink);
-  font-weight: 500; min-width: 36px; text-align: center;
-}
-
-.photo-caption {
-  font-size: 0.8rem; color: var(--muted);
-  text-align: center; min-height: 1.2em;
-  transition: opacity 0.3s; font-style: italic;
-}
-
-@keyframes shake {
-  0%,100% { transform: translateX(0); }
-  20% { transform: translateX(-6px); }
-  40% { transform: translateX(6px); }
-  60% { transform: translateX(-4px); }
-  80% { transform: translateX(4px); }
-}
-.g-arrow.shake { animation: shake 0.35s ease; }
-
-@media (max-width: 540px) {
-  .gallery-panel { padding: 22px 18px 26px; gap: 18px; }
-  .card-stack { height: 230px; }
-  .photo-card { width: 185px; height: 230px; }
-}
-</style>
 </head>
 <body>
 
@@ -305,7 +78,7 @@
   <div class="about-left reveal">
     <div class="big-initial">A</div>
     <p class="tagline">Halo! Ayo kenalan !🌸</p>
-    <p>Halo! Namaku Andin Sabila Janna, saya kerap dipanggil Andin. Seorang Mahasiswa Fakultas Ilmu Komputer, Jurusan Sistem Informasi di Universitas Sriwijaya. Saya adalah orang yang memiliki kemampuan adaptasi yang bagus dan bersemangat untuk belajar hal baru. Selain itu, saya juga orang yang tertarik pada pengembangan diri melalui pengalaman organisasi dan kerja tim, dengan fokus pada kontribusi nyata dalam lingkungan sekitar. Saat ini selain fokus belajar, saya juga aktif dalam berbagai organisasi kampus yang mendukung pengembangan minat dan keterampilan, terutama di bidang akademik maupun non akademik</p>
+    <p>Halo perkenalkan, saya Andin Sabilla Janna, biasa dipanggil Andin. Saya merupakan mahasiswa Fakultas Ilmu Komputer, Program Studi Sistem Informasi di Universitas Sriwijaya. Saya memiliki ketertarikan pada bidang UI/UX serta pengembangan website, khususnya front-end development menggunakan HTML, CSS, dan JavaScript. Saya dikenal sebagai pribadi yang adaptif, aktif, dan antusias dalam mempelajari hal baru. Selain fokus pada akademik, saya juga aktif mengikuti berbagai kegiatan dan organisasi untuk mengembangkan keterampilan, pengalaman, serta kemampuan kerja sama dalam tim.</p>
     <div class="skills-row">
       <div class="skill-pill">🎨 Figma</div>
       <div class="skill-pill">💻 Front End Development</div>
@@ -332,7 +105,7 @@
       <div class="info-icon">🎓</div>
       <div>
         <div class="info-label">Universitas</div>
-        <div class="info-val">Universitas Sriwijaya — Sistem Informasi</div>
+        <div class="info-val">Universitas Sriwijaya, Sistem Informasi</div>
       </div>
     </div>
     <div class="info-card">
@@ -346,7 +119,7 @@
       <div class="info-icon">✨</div>
       <div>
         <div class="info-label">Fokus</div>
-        <div class="info-val">UI/UX Design · Organisasi · Kreativitas</div>
+        <div class="info-val">UI/UX Design · Front End Development · User Researcher </div>
       </div>
     </div>
   </div>
@@ -370,7 +143,7 @@
       <span class="edu-badge">Sekolah Menengah Atas</span>
     </div>
     <div class="edu-item">
-      <div class="edu-dot" style="background:var(--pink); box-shadow:0 0 0 5px rgba(255,45,120,0.25)"></div>
+      <div class="edu-dot" style="background:var(--pink); box-shadow:0 0 0 5px rgba(194,24,91,0.25)"></div>
       <div class="edu-period">2023 – Sekarang</div>
       <div class="edu-school">Universitas Sriwijaya</div>
       <span class="edu-badge">S1 Sistem Informasi · FASILKOM</span>
@@ -623,7 +396,7 @@
   <div class="contact-inner">
     <div class="sec-label">Let's Connect!</div>
     <h2 class="sec-title reveal">Yuk <em>Ngobrol!</em> 🌸</h2>
-    <p class="contact-sub reveal">Ada proyek menarik, kolaborasi seru, atau sekadar ingin kenalan? Jangan ragu untuk menghubungiku — aku selalu terbuka untuk hal-hal baru!</p>
+    <p class="contact-sub reveal">Punya proyek menarik, ide seru, atau cuma mau kenalan dan ngobrol? Feel free buat hubungi aku ya!</p>
     <div class="contact-cards reveal">
       <a href="mailto:andiensj123@gmail.com" class="contact-card">
         <div class="ci">📧</div>
@@ -642,7 +415,7 @@
 
 <!-- FOOTER -->
 <footer>
-  <p>© 2025 Andin Sabilla Janna. Dibuat dengan <span class="footer-heart">♥</span> dari Palembang.</p>
+  <p>© 2025 Andin Sabilla Janna. </p>
   <p style="color:var(--pink);font-size:0.85rem">✦ UI/UX Enthusiast</p>
 </footer>
 
@@ -795,7 +568,7 @@ if(navToggle && navMenu){
     img.loading='lazy';
     img.onerror=()=>{
       card.style.background='linear-gradient(135deg,#3d0035,#1a0a2e)';
-      card.innerHTML=`<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px;text-align:center;"><div style="font-size:2.5rem;opacity:0.5">📷</div><div style="font-size:0.7rem;color:rgba(255,45,120,0.7);letter-spacing:0.06em;">Tambahkan foto di:<br>${photo.src}</div></div>`;
+      card.innerHTML=`<div style="width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:20px;text-align:center;"><div style="font-size:2.5rem;opacity:0.5">📷</div><div style="font-size:0.7rem;color:rgba(194,24,91,0.7);letter-spacing:0.06em;">Tambahkan foto di:<br>${photo.src}</div></div>`;
     };
     img.src=photo.src;
     card.appendChild(img);
